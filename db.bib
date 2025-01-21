@@ -1,0 +1,73 @@
+@article{argobots,
+  author={Seo, Sangmin and Amer, Abdelhalim and Balaji, Pavan and Bordage, Cyril and Bosilca, George and Brooks, Alex and Carns, Philip and Castelló, Adrián and Genet, Damien and Herault, Thomas and Iwasaki, Shintaro and Jindal, Prateek and Kalé, Laxmikant V. and Krishnamoorthy, Sriram and Lifflander, Jonathan and Lu, Huiwei and Meneses, Esteban and Snir, Marc and Sun, Yanhua and Taura, Kenjiro and Beckman, Pete},
+  journal={IEEE Transactions on Parallel and Distributed Systems}, 
+  title={Argobots: A Lightweight Low-Level Threading and Tasking Framework}, 
+  year={2018},
+  volume={29},
+  number={3},
+  pages={512-526},
+}
+
+@inproceedings{chfs,
+	address = {New York, NY, USA},
+	series = {{HPCAsia} '22},
+	title = {{CHFS}: {Parallel} {Consistent} {Hashing} {File} {System} for {Node}-local {Persistent} {Memory}},
+	isbn = {9781450384988},
+	shorttitle = {{CHFS}},
+	url　= {https://dl.acm.org/doi/10.1145/3492805.3492807},
+	abstract = {This paper proposes a design for CHFS, an ad hoc parallel file system that utilizes the persistent memory of compute nodes. The design is based entirely on a highly scalable distributed key-value store with consistent hashing. CHFS improves the scalability of parallel data-access performance and metadata performance in terms of the number of compute nodes by eliminating dedicated metadata servers, sequential execution, and centralized data management. The implementation efficiently utilizes multicore and manycore CPUs, high-performance networks, and remote direct memory access by the Mochi-Margo library. With a 4-node persistent memory cluster, CHFS performs 9.9 times better than the state-of-the-art DAOS distributed object storage and 6.0 times better than GekkoFS on the IOR hard write benchmark. Regarding scalability, CHFS displays better scalability and performance for both bandwidth and metadata compared with BeeOND and GekkoFS. CHFS is a promising building block for HPC storage layers.},
+	urldate = {2024-11-10},
+	booktitle = {International {Conference} on {High} {Performance} {Computing} in {Asia}-{Pacific} {Region}},
+	publisher = {Association for Computing Machinery},
+	author = {Tatebe, Osamu and Obata, Kazuki and Hiraga, Kohei and Ohtsuji, Hiroki},
+	month = jan,
+	year = {2022},
+	pages = {115--124},
+}
+
+@inproceedings{gekkofs,
+	title = {{GekkoFS} - {A} {Temporary} {Distributed} {File} {System} for {HPC} {Applications}},
+	url = {https://ieeexplore.ieee.org/document/8514892},
+	abstract = {We present GekkoFS, a temporary, highly-scalable burst buffer file system which has been specifically optimized for new access patterns of data-intensive High-Performance Computing (HPC) applications. The file system provides relaxed POSIX semantics, only offering features which are actually required by most (not all) applications. It is able to provide scalable I/O performance and reaches millions of metadata operations already for a small number of nodes, significantly outperforming the capabilities of general-purpose parallel file systems.},
+	urldate = {2024-11-11},
+	booktitle = {2018 {IEEE} {International} {Conference} on {Cluster} {Computing} ({CLUSTER})},
+	author = {Vef, Marc-André and Moti, Nafiseh and Süß, Tim and Tocci, Tommaso and Nou, Ramon and Miranda, Alberto and Cortes, Toni and Brinkmann, André},
+	month = sep,
+	year = {2018},
+	keywords = {Metadata, Systems operation, Libraries, Servers, Semantics, Throughput, Data structures, Distributed File Systems, HPC, Burst Buffers},
+	pages = {319--324},
+}
+
+@webpage{rust-async-rfc,
+  title = {{Rust} {RFC} {2394:} {async\_await}},
+  author = {{Rust foundation}},
+  year = {2020},
+  organization = {{Rust} {foundation}},
+  url = {https://github.com/madsys-dev/async-ucx},
+  refdate =         {2023/11/12}
+}
+
+
+@webpage{glommio,
+  author =       {glommio},
+  title =        {glommio},
+  organization = {DataDog},
+  url = {https://github.com/DataDog/glommio},
+  refdate =         {2024/11/12}
+}
+
+@webpage{tokio,
+  author =       {tokio-rs},
+  title =        {tokio},
+  organization = {tokio-rs},
+  url = {https://github.com/tokio-rs/tokio},
+  refdate =         {2024/11/12}
+}
+
+@webpage{async-ucx,
+  author =       {{madsys}-{dev}},
+  title =        {async-ucx},
+  organization = {madsys-dev},
+  url = {https://github.com/madsys-dev/async-ucx},
+  refdate =         {2024/11/12}
+}

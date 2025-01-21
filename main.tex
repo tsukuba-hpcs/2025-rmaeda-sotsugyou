@@ -1,787 +1,619 @@
-%%
-%% 研究報告用スイッチ
-%% [techrep]
-%%
-%% 欧文表記無しのスイッチ(etitle,eabstractは任意)
-%% [noauthor]
-%%
+\documentclass[a4paper,11pt]{jreport}
 
-%\documentclass[submit,techrep]{ipsj}
-\documentclass[submit,techrep,noauthor]{ipsj}
-
-
-
-\usepackage[dvips]{graphicx}
+\usepackage[dvipdfmx]{graphicx}
+%% dvipdfmx を使ってPDFの「しおり」を付ける場合
+%%\usepackage[dvipdfmx,bookmarks=true,bookmarksnumbered=true,bookmarkstype=toc]{hyperref} \usepackage{pxjahyper}
+\usepackage{ulem}
+\usepackage{times}
+\usepackage[dvipdfmx]{graphicx}
 \usepackage{latexsym}
+\usepackage[hang,small,bf]{caption}
+\usepackage[subrefformat=parens]{subcaption}
+\usepackage{listings}
+\captionsetup{compatibility=false}
+
+\newcommand\figref[1]{\textbf{図~\ref{fig:#1}}}
+\newcommand\tabref[1]{\textbf{表~\ref{tab:#1}}}
+
 
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
 \def\|{\verb|}
 %
 
-%\setcounter{巻数}{59}%vol59=2018
-%\setcounter{号数}{10}
-%\setcounter{page}{1}
+
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+
+\setcounter{tocdepth}{3}
+\setcounter{page}{-1}
+
+\setlength{\oddsidemargin}{0.1in}
+\setlength{\evensidemargin}{0.1in} 
+\setlength{\topmargin}{0in}
+\setlength{\textwidth}{6in} 
+%\setlength{\textheight}{10.1in}
+\setlength{\parskip}{0em}
+\setlength{\topsep}{0em}
+
+%% タイトル生成用パッケージ（重要）
+\usepackage{coins-jp}
+
+
+
+
+%% タイトル
+\title{非同期I/Oと非同期通信処理を統合管理する\\スケジューリング設計の検討}
+%% 著者
+\author{前田　椋祐}
+%% 指導教員
+\advisor{建部　修見}
+
+%% 年度と主専攻名
+\fiscalyear{2024}
+%\majorfield{ソフトウェアサイエンス主専攻}
+% \majorfield{情報システム主専攻}
+\majorfield{知能情報メディア主専攻}
 
 
 \begin{document}
 
-
-\title{情報処理学会研究報告の準備方法\\
-（2018年10月29日版）}
-
-\etitle{How to Prepare Your Paper for IPSJ SIG Technical Report \\ (version 2018/10/29)}
-
-\affiliate{IPSJ}{情報処理学会\\
-IPSJ, Chiyoda, Tokyo 101--0062, Japan}
-
-
-\paffiliate{JU}{情報処理大学\\
-Johoshori Uniersity}
-
-\author{情報 太郎}{Joho Taro}{IPSJ}[joho.taro@ipsj.or.jp]
-\author{処理 花子}{Shori Hanako}{IPSJ}
-\author{学会 次郎}{Gakkai Jiro}{IPSJ,JU}[gakkai.jiro@ipsj.or.jp]
-
-\begin{abstract}
-本稿は，情報処理学会研究報告に投稿する原稿を執筆する際の注意点等をまとめたものである．
-\LaTeX と専用のスタイルファイルを用いた場合の論文フォーマットに関する指針，
-および論文の内容に関してするべきこと，
-するべきでないことをまとめたべからずチェックリストからなる．
-本稿自体も\LaTeX と専用のスタイルファイルを用いて執筆されているため，
-論文執筆の際に参考になれば幸いである．
-\end{abstract}
-
-
-%
-%\begin{jkeyword}
-%情報処理学会論文誌ジャーナル，\LaTeX，スタイルファイル，べからず集
-%\end{jkeyword}
-%
-%\begin{eabstract}
-%This document is a guide to prepare a draft for submitting to IPSJ
-%Journal, and the final camera-ready manuscript of a paper to appear in
-%IPSJ Journal, using {\LaTeX} and special style files.  Since this
-%document itself is produced with the style files, it will help you to
-%refer its source file which is distributed with the style files.
-%\end{eabstract}
-%
-%\begin{ekeyword}
-%IPSJ Journal, \LaTeX, style files, ``Dos and Dont's'' list
-%\end{ekeyword}
-
 \maketitle
 
-%1
-\section{はじめに}
-
-情報処理学会では，研究報告の発行を行っている．
-
-本稿では，まずそのスタイルファイルを用いた論文のフォーマットに関して述べる．
-新たなスタイルファイルでは，
-極力特別なコマンドは使わずに，標準的な\LaTeX のスタイルを踏襲している．
-論文フォーマットに関しては，\ref{sec:format}~章で後述する指針に従って頂くが，
-そこに規定されていること以外は標準的な\LaTeX のコマンドをそのまま使うことができる．
-本稿は，そのスタイルファイルを実際に使っているので，論文執筆の際に参考にされたい．
+\thispagestyle{empty}
 
 
+\thispagestyle{empty}
+\vspace*{20pt plus 1fil}
+\parindent=1zw
+\noindent
+%%
+%% 論文の要旨
+%%
+\begin{center}
+{\Large \bf 要　　旨}
+\vspace{2cm}
+\end{center}
+分散ファイルシステム環境下では，各計算ノードに対して膨大な量のI/Oリクエストが発生する.
+I/O性能を向上させるためには，非同期I/O APIを活用し，I/Oリクエストを多重化することでオーバーヘッドを削減することが有効である.
+しかし，非同期処理の実現において大量のネイティブスレッドを使用することは，リソースの過剰消費につながる可能性がある.
+そこで本研究では，少ないスレッド数で効率的なI/Oを実行する手法として，
+io\_uringを用いたシングルスレッド環境での非同期I/Oの性能評価を行い，その有効性を検証する.
+さらに，I/Oリクエストとio\_uringのスケジューリングを統合した場合の性能評価も行う.
 
+%%%%%
+\par
+\vspace{0pt plus 1fil}
+\newpage
+
+\pagenumbering{roman} % I, II, III, IV 
+\tableofcontents
+\listoffigures
+%\listoftables
+
+\pagebreak \setcounter{page}{1}
+\pagenumbering{arabic} % 1,2,3
+
+\chapter{はじめに}
+
+高性能計算（HPC）分野においては，半導体技術の向上に伴う高い計算性能をもつアクセラレータの登場や，
+計算システム全体の大規模並列化によって演算性能が飛躍的に向上している.
+しかし，ストレージハードウェアの性能向上はそれに追随しておらず，
+ファイルI/Oがシステム全体のボトルネックとなるケースが多い.
+特に，ファイルI/Oにおける高レイテンシーが計算効率の低下を引き起こし，システム全体の性能向上を阻む要因となっている.
+この問題に対処するため，近年ではストレージシステムにおいてI/Oリクエストの非同期化や多重化が活用され，
+ファイルI/Oのレイテンシー隠蔽とスループット向上が図られている.
+
+このI/Oの非同期化に関しては，カーネルレベルでの技術として近年注目を集めているのが，io\_uring APIである.
+io\_uringは，従来のブロッキングI/Oや従来の非同期I/Oに比べ，効率的に非同期処理を実現し，ストレージアクセスのレイテンシーを効果的に短縮する技術として期待されている.
+現在，io\_uringに関連する様々な研究が行われ，その性能や応用可能性が多くの観点から探求されている.
+
+また，近年ではNVMe SSDやPersistent Memoryといった安価かつ高速なストレージデバイスが登場したことで，
+計算ノードにもストレージを搭載し，計算ノードでキャッシュファイルシステムを構築することで
+ファイルI/Oの高速化をるアプローチが注目されている\cite{chfs}\cite{gekkofs}.
+これにより計算ノード自身が一時的にデータを保持でき，ストレージノードへのアクセス頻度を減らすことでI/Oレイテンシーを低減し，全体的なパフォーマンスの向上が期待されている.
+
+このような水平分散ファイルシステムではノード数が増加するに従ってコネクション数は$O(n^2)$の規模で増加し，
+各ノードには多量の通信イベントが発生する. このような状況下で効率的なI/O処理を実現するには，
+非同期処理を活用する必要があり，適切な非同期通信・非同期I/Oを行うことが肝要である.
+そのためには通信イベントとI/Oイベントの非同期スケジューリングを統合することで，より適切な非同期処理を実現できる可能性がある.
+通信とI/Oの連携が可能なスケジューリング機構が構築されることで，
+膨大な通信量が発生する水平分散ファイルシステムにおいても，従来以上のスループットが確保できると期待される.
+
+加えて，HPC環境においてはCPUコアが多数搭載されており，並列計算を実行するときは多数のスレッドを生成することで
+高速な計算処理を実現している.
+この際，ファイルシステムが多数のスレッドを生成しI/O処理を行うと，コンテキストスイッチのオーバーヘッドにより，
+本来の計算処理に支障をきたす可能性がある.
+そのため，できるだけ少ないスレッドで効率的にI/Oを実行することが重要である.
+
+本研究では，HPC環境におけるこのようなストレージ性能の向上を目指し，
+非同期I/Oをより活用するかつ，少ないスレッド数での効率的なI/O処理を実現するべく，
+軽量スレッドを用いて通信イベントとI/Oイベントの非同期スケジューリングを統合した際の性能を評価する.
+
+\chapter{予備実験: io\_uringの性能評価}
+\section{io\_uringのアーキテクチャ}
+io\_uringは，Linuxカーネルにおいて効率的な非同期I/Oを実現するために設計されたインターフェースであり，
+従来のI/O APIと比較して低レイテンシかつ高スループットなI/O処理を可能にしている.
+io\_uringの基本的なアーキテクチャは，ユーザ空間とカーネル空間間で共有されるリングバッファを用いたデータ構造に基づいている.
+このリングバッファは，Submission Queue（SQ）とCompletion Queue（CQ）の2つのキューを備えており，それぞれI/Oリクエストの発行と完了通知に使用される.
+
+ユーザ空間のアプリケーションは，I/OリクエストをSQにエントリとして記述し，カーネルはこのSQを監視することでI/O操作を非同期的に実行する.
+操作が完了すると，カーネルは結果をCQに書き込み，アプリケーションはこのCQを参照することで完了したI/Oの結果を確認できる.
+この非同期処理により，従来のブロッキングI/Oにおいて必要だったシステムコール回数が大幅に削減され，カーネルとのコンテキストスイッチのオーバーヘッドが軽減される.
+
+また，io\_uringはバッチ処理が可能で，複数のI/Oリクエストを一括して発行することができるため，スループットを高めつつレイテンシを抑えることができる.
+この特性は，大量のI/Oリクエストが発生するHPC環境やストレージ集約型のアプリケーションにおいて特に効果を発揮する.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=12cm, bb=0 0 503 591]{figures/io_uring_arch.png}
+	\caption{io\_uringのアーキテクチャ}
+	\label{fig:io_uring}
+\end{figure}
 
 %2
-\section{投稿の流れ}
-
-
-%2.1
-\subsection{準備}
-
-情報処理学会論文誌ジャーナルの\LaTeX スタイルファイルを含む論文執筆キットは
-\begin{quote}
-\small
-\|http://www.ipsj.or.jp/jip/submit/style.html|
-\end{quote}
-からダウンロードすることができる．論文執筆キットは以下のファイルを含んで
-いる．
-\begin{enumerate}
-\item \|ipsj.cls      |: 最終原稿用スタイルファイル
-\item \|ipsjdraft.sty |: 投稿用スタイル（査読用）
-\item \|ipsjpref.sty  |: 序文用スタイル
-\item \|jsample.tex   |: 本稿のソースファイル
-\item \|esample.tex   |: 英文サンプルのソースファイル
-\item \|ipsjsort.bst  |: jBibTEX スタイル（著者名順）
-\item \|ipsjunsrt.bst |: jBibTEX スタイル（出現順）
-\item \|bibsample.bib |: 文献リストのサンプル
-\item \|ebibsample.bib|: 英文文献リストのサンプル
-\item \|tech-jsample.tex:| 研究報告（和文）のサンプル
-\item \|tech-esample.tex:| 研究報告（英文）のサンプル
-\end{enumerate}
-実行環境としては\LaTeXe を前提としているので，準備されたい．
-
-
-
-
-
-
-
-%2.2
-\subsection{原稿の作成と投稿}
-
-本稿に従って用意した投稿用原稿の\LaTeX ソースからpdfファイルを作成し，
-Adobeのpdf readerで読めることを確認した後，
-\begin{quote}
-\small
-\|https://ipsj1.i-product.biz/ipsjsig/**|
-\end{quote}
-(**部分は研究会の略称，DBS等)の研究会投稿システムにて，指示にし従い投稿する．
-
-
-
-
-
-
-
-%3
-\section{論文フォーマットの指針}
-\label{sec:format}
-
-以下，情報処理学会論文誌ジャーナル用スタイルファイルを用いた論文フォーマットの指針について述べるので，
-これに従って原稿を用意頂きたい．
-\LaTeX を用いた一般的な文章作成技術については，
-\cite{okumura, companion} 等を参考にされたい．
-
-
-
-%4
-\section{論文の構成}
-\label{config}
-
-ファイルは次のようになる．下線部は投稿時に省略可能なもの．
-
-\noindent
-\|\documentclass[submit,techrep,noauthor]{ipsj}|\\
-\quad 必要ならばユーザのマクロをここに記述\\
-\|\begin{document}|\\
-\|\title{表題(和文)}|\\
-\|\etitle{表題(英文)}|\\
-\Underline{\|\affiliate{所属ラベル}{<和文所属>\\<英文所属>}|}\\
-\quad 必要ならば \|\paffiliate| により現在の所属を宣言する\\
-\Underline{\|\paffiliate{現所属ラベル}{<和現所属>\\<英現所属>}|}\\\\
-\Underline{\|\author{情報 太郎}{Taro Joho}|}\\
-\Underline{\|          {<所属ラベル>}[E-mail]|}\\
-\Underline{\|\author{処理 花子}{Hanako Shori}|}\\
-\Underline{\|          {<所属ラベル2,現所属ラベル3>}|}\\\\
-\|\begin{abstract}|\\
-\|<概要（和文）>|\\
-\|\end{abstract}|\\
-\|\begin{eabstract}|\\
-\|<概要（英文）>|\\
-\|\end{eabstract}|\\
-\|\maketitle|\\
-\|\section{|第1節の表題\|}|\\
-\dots\dots\dots\dots\dots\\
-\quad \|<本文>|\\
-\dots\dots\dots\dots\dots\\
-謝辞がある場合は\\
-\|\begin{acknowledgment}|\\
-\|\end{acknowledgment}|\\\\
-\|\begin{thebibliography}{99}%9 or 99|\\
-\|\bibitem{1}|\\
-\|\bibitem{2}|\\
-\|\end{thebibliography}|\\\\
-付録がある場合は\\
-\|\appendix|\\
-\|\section{|付録1節の表題\|}|\\
-\|\end{document}|
-
-
-%4.1
-\subsection{表題・著者名等}
-
-表題，著者名とその所属，および概要を前述のコマンドや環境により{\bf 和文と
-英文の双方について}定義した後，\|\maketitle| によって出力する．
-
-
-\newpage%%%%%
-
-%4.1.1
-\subsubsection{表題} 
-
-表題は，\|\title| および \|\etitle| で定義した表題はセンタリングされる．
-文字数の多いものについては，適宜 \|\\| を挿入して改行する．
-
-%4.1.2
-\subsubsection{著者名・所属} 
-
-各著者の所属を第一著者から順に \|\affiliate| を用いてラベル（第1引数）を付けながら定義すると，
-脚注に番号を付けて所属が出力される．
-なお，複数の著者が同じ所属である場合には，
-一度定義するだけで良い．
-
-
-
-現在の所属は \|\paffiliate| を用い，同様にラベル，所属先を記述する．
-所属先には自動で「現在」，
-\|\\|の改行で「Presently with」が挿入される．
-著者名は \|\author| で定義する．各著者名の直後に，英文著者名，
-所属ラベルとメールアドレスを記入する．
-著者が複数の場合は \|\author| を繰り返すことで，
-2人，3人，\dots と増えていく．
-現在の所属や，複数の所属先を追加する場合には，所属ラベルをカンマで区切り，追加すればよい．
-
-
-また，メールアドレス部分は省略が可能である．
-
-
-
-
-
-%4.1.3
-\subsubsection{概要} 
-
-和文の概要は \|abstract| 環境の中に，
-英文の概要は \|eabstract| 環境の中に，それぞれ記述する．
-
-
-
-%4.2
-\subsection{本文}
-
-%4.2.1
-\subsubsection{見出し}
-
-節や小節の見出しには \|\section|, \|\subsection|, \|\subsubsection|,
-\|\paragraph| といったコマンドを使用する．
-
-\<「定義」，「定理」などについては，\|\newtheorem|で適宜環境を宣言し，そ
-の環境を用いて記述する．
-
-%4.2.2
-\subsubsection{行送り}
-
-2段組を採用しており，左右の段で行の基準線の位置が一致することを原則としている．
-また，節見出しなど，
-行の間隔を他よりたくさんとった方が読みやすい場所では，
-この原則を守るようにスタイルファイルが自動的にスペースを挿入する．
-したがって本文中では \|\vspace| や \|\vskip| を用いたスペースの調整を行なわないようにすること．
-
-
-%4.2.3
-\subsubsection{フォントサイズ}
-
-フォントサイズは，スタイルファイルによって自動的に設定されるため，
-基本的には著者が自分でフォントサイズを変更する必要はない．
-
-%4.2.4
-\subsubsection{句読点}
-
-句点には全角の「．」，
-読点には全角の「，」を用いる．
-ただし英文中や数式中で「.」や「,」を使う場合には，
-半角文字を使う．「。」や「、」は使わない．
-
-
-
-%4.2.5
-\subsubsection{全角文字と半角文字}
-
-全角文字と半角文字の両方にある文字は次のように使い分ける．
-
-\begin{enumerate}
-\item 括弧は全角の「（」と「）」を用いる．但し，英文の概要，図表見出し，
-書誌データでは半角の「(」と「)」を用いる．
-
-\item 英数字，空白，記号類は半角文字を用いる．ただし，句読点に関しては，
-前項で述べたような例外がある．
-
-\item カタカナは全角文字を用いる．
-
-\item 引用符では開きと閉じを区別する．
-開きには \|``| を用い，閉じには\|''| を用いる．
-\end{enumerate}
-
-%4.2.6
-\subsubsection{箇条書}
-
-箇条書に関する形式を特に定めていない．場合に応じて標準的な \|enumerate|,
-\|itemize|, \|description| の環境を用いてよい．
-
-
-%4.2.7
-\subsubsection{脚注}
-
-脚注は \|\footnote| コマンドを使って書くと，
-ページ単位に\footnote{脚注の例．}や\footnote{二つめの脚注．}のような参照記号とともに脚注が生成される．
-なお，ページ内に複数の脚注がある場合，参照記号は\LaTeX を2回実行しないと正しくならないことに注意されたい．
-
-
-
-また場合によっては，
-脚注をつけた位置と脚注本体とを別の段に置く方がよいこともある．
-この場合には，\|\footnotemark| コマンドや \|\footnotetext| コマンドを使って対処していただきたい．
-
-
-なお，脚注番号は論文内で通し番号で出力される．
-
-
-
-
-%4.2.8
-\subsubsection{OverfullとUnderfull}
-
-組版時にはoverfullを起こさないことを原則としている．
-従って，まず提出するソースが著者の環境でoverfullを起こさないように，
-文章を工夫するなどの最善の努力を払っていただきたい．
-但し，\|flushleft| 環境，\|\\|，\|\linebreak| などによる両端揃えをしない形でのoverfullの回避は，
-できるだけ避けていただきたい．
-また著者の執筆時点では発生しないoverfullが，
-組版時の環境では発生することもある．
-このような事態をできるだけ回避するために，
-文中の長い数式や \|\verb| を避ける，
-パラグラフの先頭付近では長い英単語を使用しない，
-などの注意を払うようにして頂きたい．
-
-
-
-
-%4.3
-\subsection{数式}\label{sec:Item}
-
-%4.3.1
-\subsubsection{本文中の数式}
-
-本文中の数式は \|$| と \|$|, \|\(| と \|\)|, あるいは \|math| 環境のいず
-れで囲んでもよい．
-
-%4.3.2
-\subsubsection{別組の数式}
-
-別組数式(displayed math)については \|$$| と \|$$| は使用せずに，
-\|\[| と \|\]| で囲むか，
-\|displaymath|, \|equation|, \|eqnarray| のいずれかの環境を用いる．
-これらは
-%
-\begin{equation}
-\Delta_l = \sum_{i=l|1}^L\delta_{pi}
-\end{equation}
-%
-のように，センタリングではなく固定字下げで数式を出力し，
-かつ背が高い数式による行送りの乱れを吸収する機能がある．
-
-%4.3.3
-\subsubsection{eqnarray環境}
-
-互いに関連する別組の数式が2行以上連続して現れる場合には，
-単に\|\[| と \|\]|，
-あるいは \|\begin{equation}| と\|\end{equation}| で囲った数式を書き並べるのではなく，
-\|\begin|\allowbreak\|{eqnarray}| と \|\end{eqnarray}| を使って，
-等号（あるいは不等号）の位置で縦揃えを行なった方が読みやすい．
-
-
-%4.3.4
-\subsubsection{数式のフォント}
-
-\LaTeX が標準的にサポートしているもの以外の特殊な数式用フォントは，
-できるだけ使わないようにされたい．
-どうしても使用しなければならない場合には，
-その旨申し出て頂くとともに，
-組版工程に深く関与して頂くこともあることに留意されたい．
-
-
-\begin{figure}[tb]
-\setbox0\vbox{
-\hbox{\|\begin{figure}[tb]|}
-\hbox{\quad \|<|図本体の指定\|>|}
-\hbox{\|\caption{<|和文見出し\|>}|}
-\hbox{\|\ecaption{<|英文見出し\|>}|}
-\hbox{\|\label{| $\ldots$ \|}|}
-\hbox{\|\end{figure}|}
-}
-\centerline{\fbox{\box0}}
-\caption{1段幅の図}
-\ecaption{Single column figure with caption\\
-explicitly broken by $\backslash\backslash$.}
-\label{fig:single}
-\end{figure}
-
-
-
-%4.4
-\subsection{図}
-
-1段の幅におさまる図は，
-\figref{fig:single} の形式で指定する．
-位置の指定に \|h| は使わない．
-また，図の下に和文と英文の双方の見出しを，
-\|\caption| と \|\ecaption| で指定する．
-文字数が多い見出しはは自動的に改行して最大幅の行を基準にセンタリングするが，
-見出しが2行になる場合には適宜 \|\\| を挿入して改行したほうが良い結果となることがしばしばある
-（\figref{fig:single} の英文見出しを参照）．
-図の参照は \|\figref{<|ラベル\|>}| を用いて行なう．
-
-
-
-
-\begin{figure}[tb]
-\begin{minipage}[t]{0.5\columnwidth}
-\footnotesize
-\setbox0\vbox{
-\hbox{\|\begin{minipage}[t]%|}
-\hbox{\|  {0.5\columnwidth}|}
-\hbox{\|\CaptionType{table}|}
-\hbox{\|\caption{| \ldots \|}|}
-\hbox{\|\ecaption{| \ldots \|}|}
-\hbox{\|\label{| \ldots \|}|}
-\hbox{\|\makebox[\textwidth][c]{%|}
-\hbox{\|\begin{tabular}[t]{lcr}|}
-\hbox{\|\hline\hline|}
-\hbox{\|left&center&right\\\hline|}
-\hbox{\|L1&C1&R1\\|}
-\hbox{\|L2&C2&R2\\\hline|}
-\hbox{\|\end{tabular}}|}
-\hbox{\|\end{minipage}|}}
-\hbox{}
-\centerline{\fbox{\box0}}
-\caption{\protect\tabref*{tab:right} の中身}
-\ecaption{Contents of Table \protect\ref{tab:right}.}
-\label{fig:left}
-\end{minipage}%
-\begin{minipage}[t]{0.5\columnwidth}
-\CaptionType{table}
-\caption{\protect\figref*{fig:left} で作成した表}
-\ecaption{A table built by\\ Fig.\,\protect\ref{fig:left}.}
-\label{tab:right}
-\vskip1mm
-\makebox[\textwidth][c]{\begin{tabular}[t]{lcr}\hline\hline
-left&center&right\\\hline
-L1&C1&R1\\
-L2&C2&R2\\\hline
-\end{tabular}}
-\end{minipage}
-\end{figure}
-
-\begin{figure*}[tb]
-\setbox0\vbox{\large
-\hbox{\|\begin{figure*}[t]|}
-\hbox{\quad \|<|図本体の指定\|>|}
-\hbox{\|\caption{<|和文見出し\|>}|}
-\hbox{\|\ecaption{<|英文見出し\|>}|}
-\hbox{\|\label{| $\ldots$ \|}|}
-\hbox{\|\end{figure*}|}}
-\centerline{\fbox{\hbox to.9\textwidth{\hss\box0\hss}}}
-\caption{2段幅の図}
-\ecaption{Double column figure.}
-\label{fig:double}
+\section{io\_uringの性能評価}\label{sec:io_uring_eval}
+非同期I/O単体の性能評価を行うために，pwrite/preadとio\_uringの性能測定を行った.
+性能評価にはfioのバージョンは3.37を使用し，以下の設定で性能測定を行った.
+
+\begin{itemize}
+	\item ファイルサイズ: 100GB
+	\item バッファサイズ: 1 〜 1024KiB
+	\item io\_depth: 1 〜 256
+	\item スレッド数: 1
+	\item direct read/write
+\end{itemize}
+
+\subsection{実験環境}
+本実験では，筑波大学計算科学研究センターで運用中のPegasus スーパーコンピュータを性能評価に用いた．
+構成は表\ref{tab:pegasus}の通りである．
+実験ではPegasus スーパーコンピュータに搭載されているNVMe SSDを用いており，
+I/O性能測定に用いたファイルはノードローカルに搭載されているNVMe SSDにマウントされたxfsファイルシステム上に配置している．
+
+
+\begin{table*}[ht!]
+	\centering
+	\caption{Pegasus システムの概要}
+	\label{tab:pegasus}
+	\hbox to \hsize{\hfil
+		\begin{tabular}{l|l}\hline\hline
+			CPU          & Intel Xeon Platinum 8468 (48 cores, 1 socket)          \\
+			RAM          & 128 GiB, DDR5-4800 16GiB x12 @ 4400 MHz                \\
+			% Persistent Memory & 2 TiB，Intel Optane Persistent Memory 300 Series 256 GiB x8 \\
+			% GPU               & NVIDIA H100 PCIe x1                                         \\
+			NVMe SSD     & 5.4 TiB, RAID-0 @ Micron NVMe 3.2 TB x2, PCIe 4.0 x4   \\
+			Interconnect & Mellanox ConnextX-7 InfiniBand NDR200 x1, PCIe 5.0 x16 \\ \hline
+		\end{tabular}\hfil}
+\end{table*}
+
+\subsection{測定結果}
+\subsubsection{bandwidth性能}
+pwrite/preadとio\_uringの性能測定結果を\figref{bandwidth}に示す．
+sequential read[\figref{seqread}]，random read[\figref{randread}]ではpread，io\_uringともにbuffer sizeに対して線形にbandwidthが向上している．
+またio\_depthの深さを大きくするにつれbandwidthが向上しており，io\_depthが2以上の場合はpreadよりもio\_uringの方が高いbandwidthを達成しており，
+かつより小さいbuffer sizeでHW限界の性能を引き出すことができている．
+sequential write[\figref{seqwrite}]，random write[\figref{randwrite}]ではreadに比べやや不安定な結果となっているが，
+io\_depthが4以上の場合はreadと同じくpwriteに比べio\_uringの方が高いbandwidthを達成していることがわかる．
+
+\begin{figure*}[t]
+	\begin{tabular}{cc}
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/bw_result_seqr_job1.pdf}
+			\subcaption{sequential read}
+			\label{fig:seqread}
+		\end{minipage} & 
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/bw_result_randr_job1.pdf}
+			\subcaption{random read}
+			\label{fig:randread}
+		\end{minipage} \\
+		
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/bw_result_seqw_job1.pdf}
+			\subcaption{sequential write}
+			\label{fig:seqwrite}
+		\end{minipage} & 
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/bw_result_randw_job1.pdf}
+			\subcaption{random write}
+			\label{fig:randwrite}
+		\end{minipage}
+	\end{tabular}
+	\caption{I/O性能測定結果}
+	\label{fig:bandwidth}
+\end{figure*}
+
+\subsubsection{CPU効率}
+次に，CPU使用率に対するbandwidthの関係を\figref{cpu}に示す．
+グラフの性質としては\figref{bandwidth}と殆ど変わらない結果となっているが，
+readではio\_uringはbuffer sizeが1024KiBに至るまで線形に性能が向上している一方，
+preadはbuffer sizeが128KiBを超えると傾きが緩やかになっており，性能向上率が低下していることがわかる．
+これは，preadではカーネルのメモリ空間にブロックデバイスから読み込んだデータを配置した後，
+ユーザーのメモリにメモリコピーが発生し，buffer sizeが大きくなればなるほどメモリコピーのオーバーヘッドが大きくなるためであると考えられる．
+またread/write共にbuffer sizeが小さい場合はI/Oに対するCPU効率自体は大きな差はないが，
+bandwidthの値はio\_uringの方が高くなっている．
+このことから，io\_uringはpread/pwriteに比べてCPU使用率を高い状態でI/Oを実行していることがわかる．
+
+\begin{figure*}[t]
+	\begin{tabular}{cc}
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/per_bw_cpu_usage_result_seqr_job1.pdf}
+			\subcaption{sequential read}
+			\label{fig:seqreadcpu}
+		\end{minipage} & 
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/per_bw_cpu_usage_result_randr_job1.pdf}
+			\subcaption{random read}
+			\label{fig:randreadcpu}
+		\end{minipage} \\
+		
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/per_bw_cpu_usage_result_seqw_job1.pdf}
+			\subcaption{sequential write}
+			\label{fig:seqwritecpu}
+		\end{minipage} & 
+		\begin{minipage}[t]{0.45\hsize}
+			\centering
+			\includegraphics[width=9cm, bb=0 0 800 550]{figures/per_bw_cpu_usage_result_randw_job1.pdf}
+			\subcaption{random write}
+			\label{fig:randwritecpu}
+		\end{minipage}
+	\end{tabular}
+	\caption{bandwidth / CPU使用率}
+	\label{fig:cpu}
 \end{figure*}
 
 
-また紙面スペースの節約のために，
-1つの \|figure|（または \|table|）環境の中に複数の図表を並べて表示したい場合には，
-\figref{fig:left} と \tabref{tab:right} のように個々の図表と各々の \|\caption|/\|\ecaption| 
-を \|minipage| 環境に入れることで実現できる．
-なお図と表が混在する場合，
-\|minipage| 環境の中で\|\CaptionType{figure}| あるいは \|\CaptionType|
-\|{table}| を指定すれば，
-外側の環境が \|figure| であっても \|table| であっても指定された見出しが得られる．
+\subsection{考察}
+本実験では，io\_uringを用いた非同期I/Oの性能評価を行った．
+その結果io\_uringはpread/pwriteに比べ同等か，勝る性能を示していることがわかった．
+これはpread/pwriteに比べio\_uringはシステムコールの呼び出し回数が少なく，
+カーネル・ユーザ間のコンテキストスイッチが少ないためであると考えられる．
 
+また，今回の実験環境として用いたNVMe SSDの性能特性として，
+NVMeコマンドのキューイング機能を活用することでI/O性能を向上させることができるため，
+io\_uringのような非同期I/O APIを用いることでNVMe SSDの性能を最大限引き出すことができていると考えられる．
 
+加えてCPU効率においては，バッファサイズが小さいときはio\_uringとpread/pwriteに大きな差はないが，
+バッファサイズが大きくなるにつれio\_uringの方がCPU効率が高いことがわかった．
+これにより，io\_uringを用いると，より少ないスレッド数でI/O処理を行うことができるため，
+HPC環境においては，多数のスレッドを生成することで発生するコンテキストスイッチのオーバーヘッドを軽減することができると考えられる．
 
-2段の幅にまたがる図は，
-\figref{fig:double} の形式で指定する．
-位置の指定は \|t| しか使えない．
-
-
-
-図の中身では本文と違い，
-どのような大きさのフォントを使用しても構わない（\figref{fig:double} 参照）．
-また図の中身として，encapsulate されたPostScriptファイル（いわゆるEPSファイル）を読み込むこともできる．
-読み込みのためには，プリアンブルで
-%
-\begin{quote}
-\|\usepackage{graphicx}|
-\end{quote}
-%
-を行った上で，
-\|\includegraphics| コマンドを図を埋め込む箇所に置き，
-その引数にファイル名（など）を指定する．
-
-
-
-
-%4.5
-\subsection{表}
-
-表の罫線はなるべく少なくするのが，仕上がりをすっきりさせるコツである．
-罫線をつける場合には，
-一番上の罫線には二重線を使い，左右の端には縦の罫線をつけない （\tabref{tab:example}）．
-表中のフォントサイズのデフォルトは\|\footnotesize|である．
-
-
-また，表の上に和文と英文の双方の見出しを，
-\|\caption|と \|\ecaption| で指定する．
-表の参照は \|\tabref{<|ラベル\|>}| を用いて行なう．
-
-\begin{table}[tb] 
-\caption{表の例} 
-\ecaption{An Example of Table.}
-\label{tab:example}
-\hbox to\hsize{\hfil
-\begin{tabular}{l|lll}\hline\hline
-& column1 & column2 & column3 \\\hline
-row1 &	item 1,1 & item 2,1 & ---\\
-row2 &	---      & item 2,2 & item 3,2 \\
-row3 &	item 1,3 & item 2,3 & item 3,3 \\
-row4 &	item 1,4 & item 2,4 & item 3,4 \\\hline
-\end{tabular}\hfil}
-\end{table}
-
-
-
-
-\newpage%%%%%
-
-%4.6
-\subsection{参考文献・謝辞}
-
-%4.6.1
-\subsubsection{参考文献の参照}
-
-本文中で参考文献を参照する場合には\|\cite|を使用する．
-参照されたラベルは自動的にソートされ，
-\|[]|でそれぞれ区切られる．
-%
-\begin{quote}
-文献 \|\cite{companion,okumura}| は\LaTeX の総合的な解説書である．
-\end{quote}
-%
-と書くと；
-%
-\begin{quote}
-文献\cite{companion,okumura}は\LaTeX の総合的な解説書である．
-\end{quote}
-%
-が得られる．
-
-%4.6.2
-\subsubsection{参考文献リスト}
-参考文献リストには，
-原則として本文中で引用した文献のみを列挙する．
-順序は参照順あるいは第一著者の苗字のアルファベット順とする．
-文献リストはBiB\TeX と\verb+ipsjunsrt.bst+（参照順）
-または\verb+ipsjsort.bst+（アルファベット順）を用いて作り，
-\verb+\bibliograhpystyle+と\verb+\bibliography+コマンドにより
-利用することが出来る．
-これらを用いれば，
-規定の体裁にあったものができるので，
-できるだけ利用していただきたい．
-また製版用のファイル群には\verb+.bib+ファイルではなく\verb+.bbl+ファイルを
-必ず含めることに注意されたい．
-一方，何らかの理由でthebibliography環境で文献リストを
-「手作り」しなければならない場合は，
-このガイドの参考文献リストを注意深く見て，
-そのスタイルにしたがっていただきたい．
-
-
-
-
-%4.6.3
-\subsubsection{謝辞}
-
-謝辞がある場合には，
-参考文献リストの直前に置き，
-\|acknowledgment|環境の中に入れる．
-
-
-
-%5
-\section{論文内容に関する指針}
-
-論文の内容について，
-論文誌ジャーナル編集委員会で作成した「べからず集」を以下に示す．
-投稿前のチェックリストとして利用頂きたい．
-これ以外にも，査読者用，
-メタ査読者用の「べからず集」\cite{webpage2}も公開しているので，
-参照されたい．
-また，作文技術に関する \cite{book1, book2, book3, book4}のような書籍も参考になる．
-
-
-
-%5.1
-\subsection{書き方の基本}
+\chapter{提案手法}
+\section{Rust async/await}
+Rustの非同期処理機構\cite{rust-async-rfc}は，Futureというインターフェースを実装したステートマシンによるグリーンスレッドによって実現されている.
+Rust言語ではFutureインターフェースやその糖衣構文であるasync/awaitのみが言語仕様として定義されており，
+スケジューリングや実行はサードパーティのライブラリに依存している.
+サードパーティ実装としては以下のものが挙げられる.
 
 \begin{itemize}
- \item[$\Box$] 研究の新規性，有用性，信頼性が読者に伝わるように記述する．
- \item[$\Box$] 読み手に，読みやすい文章を心がける（内容が前後する，背景・
-	       課題の設定が不明瞭などは読者にとって負担）．
- \item[$\Box$] 解決すべき問題が汎用化（一般的に記述）されていないのは再
-	       考を要する（XX大学の問題という記述に終始）．あるいは，
-	       （単に「作りました」だけで）解決すべき問題そのものの記述
-	       がないのは再考を要する．
- \item[$\Box$] 結論が明確に記されていない，または，範囲，限界，問題点な
-	       どの指摘が適切ではない，または，結論が内容にそったもので
-	       はないものは再考を要する．
- \item[$\Box$] 科学技術論文として不適当な表現や，分かりにくい表現がある
-	       のは再考を要する．
- \item[$\Box$] 極端な口語体や，長文の連続などは再考を要する．
- \item[$\Box$] 章，節のたて方，全体の構成等が適切でない文章は再考を要す
-	       る．
- \item[$\Box$] 文中の文脈から推測しないと内容の把握が困難な論文にしない．
- \item[$\Box$] 説明に飛躍した点があり，仮説等の説明が十分ではないのは再
-	       考を要する．
- \item[$\Box$] 説明に冗長な点，逆に簡単すぎる点があるのは再考を要する．
- \item[$\Box$] 未定義語を減らす．
+	\item tokio
+	\item async-std
+	\item smol
+	\item glommio
+	\item monoio
 \end{itemize}
 
+Rustの言語機能として搭載されているasync/await構文はそれぞれFutureインターフェースの宣言，pollの実行に対応しており，
+async構文を用いた関数は\figref{fig:async}のようにRustコンパイラは解釈する.
 
-%5.2
-\subsection{新規性と有効性を明確に示す}
+% \begin{lstlisting}[caption=async構文の解釈, label=lst:async]
+% // async構文を用いた関数
+% async fn foo() -> u32 {
+%   1
+% }
+
+% // async構文を使わない場合の表現
+% fn foo() -> impl Future<Output = u32> {
+%   std::future::ready(1)
+% }
+% \end{lstlisting}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=9cm, bb=0 0 800 550]{figures/async_future.png}
+	\caption{async構文の解釈}
+	\label{fig:async}
+\end{figure}
+
+impl構文は，関数の戻り値がtraitを実装している構造体を返すことを示しており，
+この場合はFutureインターフェースを実装した構造体を返すことを示している.
+
+また，戻り値がFutureとなっているような関数を定義した場合，
+Rustコンパイラはコンパイル時にFutureインターフェースを実装したステートマシン構造体を戻り値として返すように変換する.
+この構造体はローカル変数をフィールドとして持つことで，再配置されても関数の実行が継続できるようになっており，
+Rustの非同期処理におけるグリーンスレッドとしての役割を担っている. 
+
+Futureインターフェースは，pollというメソッドを定義しており，
+\figref{fig:future}に示すようなインターフェースとなっている.
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=9cm, bb=0 0 800 550]{figures/future_trait.png}
+	\caption{async構文の解釈}
+	\label{fig:future}
+\end{figure}
+pollメソッドを呼び出すことでFutureを実行することができ，
+Futureの実行結果はPoll列挙型で返される.
+Readyの場合はFutureが完了し，処理結果が返される.
+Pendingの場合はFutureが完了していないことを示し，pollメソッドを再度呼び出すことでFutureを再開する.
+await構文はpollメソッドを呼び出す処理を糖衣構文として提供しており，
+Pendingの場合はpollメソッドを再度呼び出す処理を非同期的に行うことができる.
+
+サードパーティのライブラリでは主にReactorとExecutorという
+2つのコンポーネントを実装することでスケジューリングと実行を行っている.
+
+Executor，Reactorを含めたランタイム全体の概略を\figref{fig:runtime}に示す.
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=9cm, bb=0 0 800 550]{figures/rust_async.png}
+	\caption{Rust 非同期ランタイム概略}
+	\label{fig:runtime}
+\end{figure}
+ExecutorとはFutureを実行するための仕組みである.
+複数のTask Queueを持ち，Queueに存在するFutureに対してpollメソッドを呼び出すことでFutureを実行する.
+pollメソッドの実行結果がPoll::Pendingの場合は，Sleeping Task QueueにFutureを移動し，
+後述のReactorによってTask Queueに戻されるまでFutureの実行を停止する.
+
+ReactorとはI/Oなどのプロセス外部のイベントを監視し，Executorに通知する仕組みである.
+OSからのイベント通知を受け取り，Executorに通知することでFutureの再開を行う.
+
+また，Rustの多くの非同期ランタイムでは通信やI/Oなどの重い処理のスケジューリングを
+効率的に行うためのAPIを提供しており，
+これらのAPIを用いることで，ユーザは非同期処理をより効率的に実装することができる.
+
+\section{glommio}
+glommio~\cite{glommio}はDatadog社によって開発されたRustの非同期ランタイムライブラリであり，
+I/O処理が全てio\_uring APIを通じて行われることが特徴である.
+
+glommioでは非同期処理の実行を\lstinline|LocalExecutor|という構造体を用いて行う.
+\lstinline|LocalExecutor|は，単一のネイティブスレッド上でFutureを実行するための構造体であり，
+スレッド間でのFutureの移動が発生しない.
+また，glommioはランタイムを生成する際にmain ring，latency ring，poll ringの
+三つのio\_uring ring bufferを生成し，I/Oの規模によってそれぞれのring bufferを使い分けることで，
+I/Oのスケジューリングを効率的に行うことができる.
+加えて，I/Oのbufferを割り当てる際に，独自のメモリアロケータを用いており，
+状況に応じてio\_uring APIで確保するbufferとmmapを用いて確保するbufferを使い分けることでもI/O性能を向上させている.
+
+\section{UCX}
+UCX(Unified Communication X)は，HPC環境において高性能な通信を実現するためのオープンソースライブラリである.
+高度に抽象化されたAPIを通じて，RDMAやTCPなどの通信プロトコルを透過的に利用することができる.
+また，UCXは非同期通信をサポートしており，ノンブロッキングAPIを用いることで非同期処理を実現することが可能である.
+
+\section{async-ucx}
+async-ucx~\cite{async-ucx}はSuperFSの研究チームによって開発された，
+UCXの非同期APIをRustのFutureインターフェースから呼び出せるようにラップしたライブラリである.
+Rustの型システムとの整合を実現しており，リソースの自動解放にも対応している.
+
+
+\section{通信イベントとI/Oイベントの非同期スケジューリング統合方針}\label{sec:policy}
+通信イベントとI/Oイベントの非同期スケジューリングの統合方針について述べる.
+本研究では，通信イベントとI/OイベントをRust Futureインターフェースによって抽象化し，
+単一の非同期ランタイム上で同時にスケジューリングを行うことで，非同期スケジューリングの統合を実現する.
+% RDMAやTCPを透過的なインターフェースを通じて通信可能なライブラリであるUCXを
+% Rustの非同期インターフェースから呼び出せるようラップした
+% async-ucx\cite{async-ucx}ライブラリを用いて通信を行い，
+% I/O APIの呼び出しと非同期スケジューリングの統合に後述するRust製非同期ランタイムであるglommioと，
+
+
+
+\section{通信イベントとI/Oイベントの非同期スケジューリング統合した際の性能評価}\label{sec:io_rpc_eval}
+第\ref{sec:policy}節で述べた方針に基づき，通信イベントとI/Oイベントの非同期スケジューリングを統合し，その性能評価を行う.
+
+\subsection{設計}\label{sec:io_rpc_benchprog}
+ベンチマークプログラムの概要を\figref{fig:benchmark}に示す．
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=9cm, bb=0 0 520 710]{figures/rpc_overview.png}
+	\caption{ベンチマークプログラムの概要}
+	\label{fig:benchmark}
+\end{figure}
+
+UCXとio\_uringの非同期処理の統合を，async-ucxとglommio I/O APIの関数呼び出しをawaitし，
+単一のglommioランタイム上で同時にスケジューリングすることで実現している．
+
+ベンチマークプログラムは主にClientとServerの二つで構成され，それぞれ単一のエンドポイントを持つ.
+今回の実験では，データ部のBufferにOffset 8byteを加えたバイナリデータを一つのパケットとし，
+パケット一つに対して一つのWrite I/Oイベントと対応づけて実装を行った.
+
+ClientはServerに対して，一回の送信ごとにバッファサイズ分ずらしたoffsetをパケットに含め，Serverにループ処理でパケットを送信しつづける.
+ServerはClientから受信したデータをoffset部，data部に分け，
+パケット一つごとにwriteを実行するFutureタスクをタスクキューに追加し，
+追加したタスク内で指定したファイルのoffset位置にdata部を書き込む.
+
+これらの処理をファイルサイズをバッファサイズで割った回数だけ繰り返し，
+ファイルの先頭から書き込みを始めファイルの末尾まで到達した時点での処理時間をRustの\lstinline|std::time::Instant|を用いて計測した.
+
+また，リクエスト単体での性能も測定するため，I/Oを行わずに通信のみを行い，通信後bufferを破棄する処理も実装した.
+
+\subsection{実験環境}
+第\ref{sec:io_uring_eval}節と同様に，筑波大学計算科学研究センターで運用中のPegasus スーパーコンピュータを性能評価に用いた．
+性能測定の際は2ノード間でそれぞれClientとServerプログラムを実行し，Server側ノードのスクラッチ領域にファイルを作成し，そのファイルに対してダイレクトI/Oを行った.
+
+ファイルサイズはバッファサイズ1024KiBから32KiBまでは128GiBで，16KiBから4KiBまでは16GiBで測定を行った.
+バッファサイズ16KiB以降でファイルサイズを16GiBと設定したのは，
+バッファサイズが16KiBより小さい場合にファイルサイズ128GiBで測定を実行すると，
+プロセスのメモリ使用量が肥大化してしまいノードのメモリを使い切ってしまう事象が発生したためである.
+
+\subsection{測定結果}\label{sec:io_rpc_result}
+\subsubsection{Bandwidth性能}
+Bandwidth性能の測定結果をfioでベンチしたpsyncとio\_uringの場合，リクエストのみで実行した場合，通信イベントとI/Oイベントを統合した場合それぞれに関して，
+\figref{fig:io_rpc_bw}に示す．
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=7.5cm, bb=0 0 700 450]{figures/bw_linear_plot.pdf}
+	\caption{bandwidth性能}
+	\label{fig:io_rpc_bw}
+\end{figure}
+
+fioの結果，リクエストのみ，通信・I/O統合の順に傾きが小さくなり，バッファサイズに対するBandwidthの上昇幅が小さくなっていることがわかる.
+またHW限界に律速されていない16KiB以下のバッファサイズの結果を見ると，
+fioの結果に比べて通信・I/O統合の性能は60〜70\%程度の性能低下が見られる.
+一方で，バッファサイズが小さい時は通信・I/O統合の場合とpwriteの場合で性能がほぼ同等であり，
+バッファサイズが大きくなるにつれて通信・I/O統合の性能が向上していることがわかる.
+これはバッファサイズが大きい場合に，I/Oタスクの多重化が十分機能していることを示唆している.
+
+加えて，16KiBと32KiBのバッファサイズの境でリクエストのみと通信・I/O統合の性能向上率が低下しているが，
+これは送信するファイルサイズがここで切り替わっていることが主要因であると考えられる.
+
+\section{考察と議論}\label{sec:discussion}
+第\ref{sec:io_rpc_eval}節で述べた測定結果や実装中に発生した問題を元に，通信イベントとI/Oイベントの非同期スケジューリングを統合した際の性能について考察する.
+
+\subsection{性能低下の原因}\label{sec:io_rpc_cause}
+第\ref{sec:io_rpc_result}節で述べたように，16KiB以下のバッファサイズにおいて
+fioの結果に比べて通信・I/O統合の性能が60〜70\%程度低下している.
+この性能低下の原因として，バッファサイズが小さくなればなるほどI/Oリクエストの数が増え，
+それに伴いグリーンスレッドの数が爆発的に増加していることが考えられる.
+
+第\ref{sec:policy}節で述べた実装で通信を受け取るたびにI/Oを実行するFutureタスクを生成していると述べたが，
+単純にFutureタスクをspawnするだけでは，writeが延々と実行されないという問題が発生した.
+
+これはI/Oのタスクをspawnしたのちwriteを実行する関数に対してawaitを行った際に，
+Poll::Pendingを返されるため休眠タスクのキューに移動されるが，
+その後の処理でもClientからパケットを受け取り続けるため，メインのタスクキューが空にならず，
+I/Oタスクが休眠タスクキューから復帰しないためだと考えられた.
+
+またI/O関数を呼び出すとSQEが作成され，一定以上貯まると\lstinline|io_uring_enter|が実行されるが，
+通信が継続し続けているためExecutorのキューが開かず，\lstinline|io_uring_enter|が実行されないということも考えられる.
+
+その解決策として，I/Oタスクを一定数spawnした後I/Oタスク全てをawaitすることで強制的にpollメソッドを呼び，
+I/Oタスクを実行させることができたが，その間通信がブロックされるため，性能低下が発生したと考えられる.
+
+バッファサイズが小さい場合，pwriteと通信・I/O統合の性能がほぼ同等であることからも，
+I/Oタスクのawaitが大きな障壁となっていることがわかる.
+
+\subsubsection{Executorのスケジューリング}
+非同期ランタイムを素朴に用いて通信を受け取るような実装をした場合，第\ref{sec:io_rpc_cause}節で述べたような問題が発生する.
+これは通信速度が非常に早く，ストレージのI/O速度が通信よりも比較的遅くなるといったHPC環境固有の問題であると考えられる.
+Executorのタスクキューに多量のタスクが溜まると，CPUコアがExecutorのタスクを消化することに専有されてしまうため，
+io\_uringの処理をカーネルが実行するCPU時間が確保できなくなる可能性もある.
+そのため，Executorのタスクキューの量に応じて柔軟にリクエストの処理を実行することが肝要であると本実験では明らかになった.
+
+\subsection{メモリ使用量について}
+第\ref{sec:io_rpc_eval}節で述べたが，バッファサイズが16KiB以下の場合にはプロセスのメモリ使用量が肥大化してしまうという問題がある.
+詳細な調査までは実施できていないが，主な原因としてはリクエストのBandwidthに対してI/OのBandwidthが遅いことが挙げられる.
+通信がI/Oよりも早く処理されるため，通信が継続し続けることでI/Oタスクが増加し，メモリ使用量が増加してしまうと考えられる.
+また，Serverのアプリケーションコードでパケット受け取りの実行を止めてたにも関わらず，Serverノードのメモリ使用量が増加し続けたため，
+UCXライブラリがClientから送信されてきたパケットを受け取り続けている可能性がある.
+いずれにしても，メモリ領域の詳細な調査が必要であることがわかった.
+
+\chapter{関連研究}
+\section{tokio}
+本研究で採用したglommioの他に，Rust非同期ランタイムとしてはtokio~\cite{tokio}が挙げられる.
+tokioはRustの非同期ランタイムの中でも最も広く使われているライブラリであり，
+tokio-rsコミュニティによって開発されている.
+glommioと異なる点として以下のような特徴が挙げられる.
 
 \begin{itemize}
- \item[$\Box$] 在来研究との関連，研究の動機，ねらい等が明確に説明されて
-	       いないのは再考を要する．
- \item[$\Box$] 既知／公知の技術が何であって，何を新しいアイデアとして提
-	       案しているのかが書かれていないのは再考を要する．
- \item[$\Box$] 十分な参考文献は新規性の主張に欠かせない．
- \item[$\Box$] 提案内容の説明が，概念的または抽象的な水準に終始していて，
-	       読者が提案内容を理解できない（それだけで新規性が感じられ
-	       ないもの）のは再考を要する．
- \item[$\Box$] 論文で提案した方法の有効性の主張がない，またはきわめて貧
-	       弱なのは再考を要する．
+	\item 複数のワーカースレッドを生成し，ワークスティールモデルを採用している.
+	\item 通信やI/Oなどの重い処理をブロッキングスレッドに退避させることで，その他の処理を継続する.
+	\item I/O処理は同期的APIを用いて実装されており，ブロッキングスレッドによって処理される.
 \end{itemize}
 
-%5.3
-\subsection{書き方に関する具体的な注意}
+ワーカースレッドやブロッキングスレッドを生成するため，tokioはスレッド間のコンテキストスイッチが発生する.
+
+\section{Argobots}
+HPC向け非同期ランタイムとしてはArgobots~\cite{argobots}が挙げられる.
+Argobotsは，HPCでの並列計算の高速化を目標としており，
+tokioと同じくグリーンスレッドとワーカースレッドを用いたワークスティールモデルを採用している.
+tokioと異なる点としては，ユーザーがタスク実行エンジンを指定できるほか，
+タスクキューのソートを行うことでの非同期処理高速化を行なっている.
+またI/O APIとしてABT-IOを提供しており，I/Oの実行はtokioと同じく同期的APIとブロッキングスレッドを用いて実装されているものと，
+io\_uring APIを用いた非同期I/Oを実装したものが存在する.
+
+
+\chapter{まとめ}
+\section{まとめ}
+本研究では非同期I/O APIのio\_uringのシングルスレッド環境下での性能評価と，
+通信とI/Oのイベント統合を行った際の性能評価を行った.
+
+その結果，io\_uringの性能評価では，io\_uringはpread/pwriteに比べ，シングルスレッド環境では優れた性能を示すことがわかった.
+通信とI/Oのイベント統合を行った際の性能評価では，通信と同期的APIに比べては一定程度の性能向上が見られたが，バッファサイズが小さい場合には性能低下が見られた.
+また，バッファサイズが小さく，I/Oタスクが多量に発生する場合のスケジューリング戦略が重要であることも明らかになった.
+
+\section{今後の展望}
+今回解決できなかった問題について，以下が挙げられる.
 
 \begin{itemize}
- \item[$\Box$] 和文標題が内容を適切に表現していないのは再考を要する．
- \item[$\Box$] 英文標題が内容を適切に表現していない，または英語として適
-	       切でないのは再考を要する．
- \item[$\Box$] アブストラクトが主旨を適切に表現していない，または英文が
-	       適切ではないのは再考を要する．
- \item[$\Box$] 記号・略号等が周知のものでなく，または，用語が適切でなく，
-	       または，図・表の説明が適当ではないのは再考を要する．
- \item[$\Box$] 個人的あるいは非常に小さなグループ／企業だけで通用するよ
-	       うな用語が特別な説明もなしに多用されているのは再考を要す
-	       る．
- \item[$\Box$] 図表自体は十分に明確ではない，または誤りがあるのは再考を
-	       要する．
- \item[$\Box$] 図表が鮮明ではないのは再考を要する．
- \item[$\Box$] 図表が大きさ，縮尺の指定が適切でないのは再考を要する.
+	\item 適切なタスクスケジューリングが行えているかの検証
+	\item バッファサイズが小さい場合のメモリ使用量肥大化原因の調査
+	\item epollやaioなど他の非同期I/O APIを用いた場合の性能比較
+	\item Argobotsなど他の非同期ランタイムを用いた場合の性能比較
 \end{itemize}
 
-%5.4
-\subsection{参考文献}
+適切なタスクスケジューリングが行えているかの検証については，本研究に用いたglommioの内部実装をより詳細に調査し，
+\lstinline|io_uring_enter|がどのタイミングで実行されるかの調査を行い，
+それに応じて適切なタスクスケジューリングが行えているかを検証する予定である.
 
-\begin{itemize}
- \item[$\Box$] 参考文献は10件以上必要（分野によっては20件以上，30件以上
-	       という意見もある）.
- \item[$\Box$] 十分な参考文献は新規性の主張に欠かせない．
- \item[$\Box$] 適切な文献が引用されておらず，その数も適切ではないのは再
-	       考を要する．
- \item[$\Box$] 日本人によるしかるべき論文を引用することで日本人研究コミュ
-	       ニティの発展につながる．
- \item[$\Box$] 参考文献は自分のものばかりではだめ．
-\end{itemize}
+メモリ使用量肥大化原因の調査については，メモリ診断ツールを用いてのメモリ使用量の検証や，
+UCX，glommio，io\_uringのアロケータ，デアロケータの実装の調査を行い，
+メモリ使用量肥大化の原因を特定する予定である.
 
-%5.5
-\subsection{二重投稿}
+Argobotsなど他の非同期ランタイムを用いた場合の性能比較については，　ArgobotsのABT-IOを用いて実装を行い，
+性能測定を行うことで，ランタイム間の性能比較を行いたいと考えている.
 
-\begin{itemize}
- \item[$\Box$] 二重投稿はしてはならない ─ ただし国際会議に採択された論
-	       文を著作権が問題にならないように投稿することは構わない．
- \item[$\Box$] 他の論文とまったく同じ図表を引用の明示なしに利用すること
-	       は禁止．
- \item[$\Box$] 既発表の論文等との間に重複があるのは再考を要する．
-\end{itemize}
+他の非同期I/O APIを用いた場合の性能比較については，epollやaioなど他の非同期I/O APIを用いて実装を行い，
+性能測定を行うことで，io\_uringが他の非同期I/O APIに対してどのような性能を持つのかを検証していきたい.
 
-%5.6
-\subsection{他の人に読んでもらう}
+また，本研究ではRustの非同期ランタイムであるglommioを用いて実装を行ったが，
+Futureインターフェースモデルが通信・I/Oスケジューリングの統合に適しているかの検証のために，
+ナイーブかつ小規模なタスクキュー・イベントループの非同期ランタイムを自ら実装し，
+より適切な非同期タスクスケジューリングの方法について検証を行なっていく予定である.
 
-\begin{itemize}
- \item[$\Box$] 投稿経験が少ない人は，採録された経験の豊富な人に校正して
-	       もらう．
- \item[$\Box$] 読者の立場から見て論理的な飛躍がないかに注意して記述する．
-\end{itemize}
 
-%5.7
-\subsection{その他}
+\chapter*{謝辞}
+\addcontentsline{toc}{chapter}{\numberline{}謝辞}
 
-\begin{itemize}
- \item[$\Box$] 投稿前にチェックリストの各項目を満たしているか，必ず確認
-	       する． 
-\end{itemize}
+\newpage
 
-%6
-\section{おわりに}
+\addcontentsline{toc}{chapter}{\numberline{}参考文献}
+\renewcommand{\bibname}{参考文献}
 
-本稿では，A4縦型2段組み用に変更したスタイルファイルを用いた論文のフォー
-マット方法と，論文誌ジャーナル編集委員会がまとめた「べからず集」に基づく
-論文の書き方を示した．内容的にまだ不十分の部分が多いため，意見，要望等を
-\begin{quote}
- \|editt@ipsj.or.jp|
-\end{quote}
-までお寄せ頂きたい．
+%% 参考文献に jbibtex を使う場合
+%\bibliographystyle{junsrt}
+%\bibliography{samplebib}
+%% [compile] jbibtex sample; platex sample; platex sample;
+
+%% 参考文献を直接ファイルに含めて書く場合
+% \begin{thebibliography}{1}
+% \bibitem{Bibunsho}
+% 奥村 晴彦, 黒木 裕介.
+% \newblock LaTeX2ε美文書作成入門 改訂第7版.
+% \newblock 技術評論社, 2017.
+
+% \bibitem{ScienceResearchWriting}
+% Hilary Glasman-Deal.
+% \newblock Science Research Writing: A Guide for Non-Native Speakers of English.
+% \newblock Imperial College Press, 2009.
+% \end{thebibliography}
 
 
 
-\begin{acknowledgment}
-A4横型に対するガイドを基に，本稿を作成した．
-クラスファイルの作成においては，
-京都大学の中島　浩氏にさまざまなご教示を頂き，
-さらにBiB\TeX 関連ファイルの利用についても快諾頂いたことを深謝する．
-また，A4横型に対するガイドを作成された当時の編集委員会の担当者に深謝する．
-\end{acknowledgment}
-
-
-
-% \bibliographystyle{ipsjunsrt}
-% \bibliography{bibsample}
-
-
-\begin{thebibliography}{10}
-
-\bibitem{okumura}
-奥村晴彦：改訂第5版\LaTeXe 美文書作成入門，
-技術評論社(2010).
-
-\bibitem{companion}
-Goossens, M., Mittelbach, F. and Samarin, A.:
-{\it The LaTeX Companion},
-Addison Wesley, Reading, Massachusetts (1993).
-
-\bibitem{book1}
-木下是雄：
-理科系の作文技術，
-中公新書(1981).
-
-\bibitem{book2}
-Strunk W. J. and White E.B.:
-{\it The Elements of Style, Forth Edition},
-Longman (2000).
-
-\bibitem{book3}
-Blake G. and Bly R.W.:
-{\it The Elements of Technical Writing},
-Longman (1993).
-
-\bibitem{book4}
-Higham N.J.:
-{\it Handbook of Writing for the Mathematical Sciences},
-SIAM (1998).
-
-\bibitem{webpage1}
-情報処理学会論文誌ジャーナル編集委員会：
-投稿者マニュアル(online)，
-\urlj{http://www.ipsj.or.jp/journal /submit/manual/j\_manual.html}
-(2007.04.05).
-
-\bibitem{webpage2}
-情報処理学会論文誌ジャーナル編集委員会：
-べからず集(online)，
-\urlj{http://www.ipsj.or.jp/journal/manual /bekarazu.html}
-(2011.09.15).
-
-\end{thebibliography}
-
-
-
+\nocite{*}
+\bibliographystyle{junsrt}
+\bibliography{db}
 
 \end{document}
