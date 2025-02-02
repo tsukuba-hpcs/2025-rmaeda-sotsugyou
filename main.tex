@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{jreport}
+\documentclass[a4paper,11pt,openany]{jreport}
 
 \usepackage[dvipdfmx]{graphicx}
 %% dvipdfmx を使ってPDFの「しおり」を付ける場合
@@ -76,12 +76,11 @@
 \begin{document}
 
 \maketitle
+\thispagestyle{empty}
+\newpage
 
-% \thispagestyle{empty}
 
 
-
-% \thispagestyle{empty}
 \vspace*{20pt plus 1fil}
 \parindent=1zw
 \noindent
@@ -99,6 +98,8 @@ I/O性能を向上させるためには，非同期I/O APIを活用し，I/Oリ�
 io\_uringを用いたシングルスレッド環境での非同期I/Oの性能評価を行い，その有効性を検証する.
 さらに，I/Oリクエストとio\_uringのスケジューリングを統合した場合の性能評価も行う.
 
+\thispagestyle{empty}
+
 %%%%%
 \par
 \vspace{0pt plus 1fil}
@@ -113,6 +114,7 @@ io\_uringを用いたシングルスレッド環境での非同期I/Oの性能�
 \pagenumbering{arabic} % 1,2,3
 
 \chapter{はじめに}
+
 
 高性能計算（HPC）分野においては，半導体技術の向上に伴う高い計算性能をもつアクセラレータの登場や，
 計算システム全体の大規模並列化によって演算性能が飛躍的に向上している.
