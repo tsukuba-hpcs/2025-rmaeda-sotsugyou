@@ -44,6 +44,7 @@
 \setcounter{tocdepth}{3}
 \setcounter{page}{-1}
 
+
 \setlength{\oddsidemargin}{0.1in}
 \setlength{\evensidemargin}{0.1in} 
 \setlength{\topmargin}{0in}
@@ -76,10 +77,11 @@
 
 \maketitle
 
-\thispagestyle{empty}
+% \thispagestyle{empty}
 
 
-\thispagestyle{empty}
+
+% \thispagestyle{empty}
 \vspace*{20pt plus 1fil}
 \parindent=1zw
 \noindent
@@ -303,6 +305,23 @@ io\_uringのような非同期I/O APIを用いることでNVMe SSDの性能を�
 HPC環境においては，多数のスレッドを生成することで発生するコンテキストスイッチのオーバーヘッドを軽減することができると考えられる．
 
 \chapter{提案手法}
+\section{提案手法の概要}
+本研究では，通信とストレージI/Oという二つの非同期処理を少ないコア数で効率的に実行するために，
+Rust言語の非同期処理機構を用いて，io\_uringを用いた非同期I/OとUCXを用いた非同期通信処理を統合管理するスケジューリング設計を提案する．
+
+提案手法の概要を\figref{proposed}に示す．
+\begin{figure}
+	\centering
+	\includegraphics[width=12cm, bb=0 0 2260 2505]{figures/io_net_integrate.drawio.png}
+	\caption{提案手法の概要}
+	\label{fig:proposed}
+\end{figure}
+
+本提案手法では，io\_uringを用いた非同期I/O処理とUCXを用いた非同期通信処理を統合管理するために，
+後述するRust言語の非同期処理機構を用いて，io\_uringとUCXのスケジューリングを統合する．
+Rust非同期処理機構に組み込まれたインターフェースでio\_uring，UCXそれぞれの非同期処理をラップすることでグリーンスレッド化し，
+シングルスレッド上で通信とI/Oを並行実行することで効率的な通信越しのI/O処理を実現する．
+
 \section{Rust async/await}
 Rustの非同期処理機構\cite{rust-async-rfc}は，Futureというインターフェースを実装したステートマシンによるグリーンスレッドによって実現されている.
 Rust言語ではFutureインターフェースやその糖衣構文であるasync/awaitのみが言語仕様として定義されており，
@@ -318,7 +337,7 @@ Rust言語ではFutureインターフェースやその糖衣構文であるasyn
 \end{itemize}
 
 Rustの言語機能として搭載されているasync/await構文はそれぞれFutureインターフェースの宣言，pollの実行に対応しており，
-async構文を用いた関数は\figref{fig:async}のようにRustコンパイラは解釈する.
+async構文を用いた関数は\figref{async}のようにRustコンパイラは解釈する.
 
 % \begin{lstlisting}[caption=async構文の解釈, label=lst:async]
 % // async構文を用いた関数
@@ -348,7 +367,7 @@ Rustコンパイラはコンパイル時にFutureインターフェースを実�
 Rustの非同期処理におけるグリーンスレッドとしての役割を担っている. 
 
 Futureインターフェースは，pollというメソッドを定義しており，
-\figref{fig:future}に示すようなインターフェースとなっている.
+\figref{future}に示すようなインターフェースとなっている.
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=9cm, bb=0 0 800 550]{figures/future_trait.png}
@@ -365,10 +384,10 @@ Pendingの場合はpollメソッドを再度呼び出す処理を非同期的に
 サードパーティのライブラリでは主にReactorとExecutorという
 2つのコンポーネントを実装することでスケジューリングと実行を行っている.
 
-Executor，Reactorを含めたランタイム全体の概略を\figref{fig:runtime}に示す.
+Executor，Reactorを含めたランタイム全体の概略を\figref{runtime}に示す.
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=9cm, bb=0 0 800 550]{figures/rust_async.png}
+	\includegraphics[width=15cm, bb=0 0 3555 2505]{figures/rust_async.drawio.png}
 	\caption{Rust 非同期ランタイム概略}
 	\label{fig:runtime}
 \end{figure}
@@ -423,10 +442,10 @@ Rustの型システムとの整合を実現しており，リソースの自動�
 第\ref{sec:policy}節で述べた方針に基づき，通信イベントとI/Oイベントの非同期スケジューリングを統合し，その性能評価を行う.
 
 \subsection{設計}\label{sec:io_rpc_benchprog}
-ベンチマークプログラムの概要を\figref{fig:benchmark}に示す．
+ベンチマークプログラムの概要を\figref{benchmark}に示す．
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=9cm, bb=0 0 520 710]{figures/rpc_overview.png}
+	\includegraphics[width=13cm, bb=0 0 520 710]{figures/rpc_overview.png}
 	\caption{ベンチマークプログラムの概要}
 	\label{fig:benchmark}
 \end{figure}
@@ -460,11 +479,11 @@ ServerはClientから受信したデータをoffset部，data部に分け，
 \subsection{測定結果}\label{sec:io_rpc_result}
 \subsubsection{Bandwidth性能}
 Bandwidth性能の測定結果をfioでベンチしたpsyncとio\_uringの場合，リクエストのみで実行した場合，通信イベントとI/Oイベントを統合した場合それぞれに関して，
-\figref{fig:io_rpc_bw}に示す．
+\figref{io_rpc_bw}に示す．
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7.5cm, bb=0 0 700 450]{figures/bw_linear_plot.pdf}
+	\includegraphics[width=11cm, bb=0 0 700 450]{figures/bw_linear_plot.pdf}
 	\caption{bandwidth性能}
 	\label{fig:io_rpc_bw}
 \end{figure}
@@ -586,6 +605,21 @@ Futureインターフェースモデルが通信・I/Oスケジューリング�
 
 \chapter*{謝辞}
 \addcontentsline{toc}{chapter}{\numberline{}謝辞}
+本研究を進めるにあたり終始暖かく見守っていただき，
+様々な挑戦の機会を与えていただいた筑波大学計算科学研究センターの建部修見教授に深く感謝申し上げます.
+また研究テーマの選定から実験の設計，実装，評価まで様々な助言をいただいたHPCS研究室の中野将生氏に大変感謝申し上げます.
+
+加えて，研究の方向性や論文の書き方，発表の仕方など，研究活動全般にわたって多大なるご指導をいただいた
+筑波大学計算科学研究センターの研究員である平賀弘平氏，HPCS研究室の杉原航平氏，小山創平氏に深く感謝申し上げます.
+
+学会参加や出張など，研究活動において多大なるサポートをいただいた筑波大学計算科学研究センターの事務の皆様，
+特に同センター秘書の桑野洋子氏に深く感謝申し上げます.
+
+そして，共同研究先である富士通研究所の皆様には学外の立場から多大なるご協力をいただきました，
+ここに感謝の意を述べさせていただきます.
+
+最後に，日頃より研究活動を支えていただいた研究室の皆様，友人，家族に心より感謝申し上げます.
+
 
 \newpage
 
